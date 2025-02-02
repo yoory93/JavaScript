@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery.js"></script>
+</head>
+<body>
+    <h1>Random 숫자 맞추기!!</h1>
+    <button class="start">시작!</button>
+    <input type="number" disabled>
+    <button class="check">체크!</button>
+    <h3>♥<span>10</span></h3>
+    <h4></h4>
+
+    <script>
+        // math.random은 무조건 * 숫자 개수로 생각
+        // parseInt로 정수화 한 숫자 + 시작 숫자를 의미
+        // round 반올림, ceil 올림 , abs + -> -  
+        // 1부터 100까지 숫자를 생각해서 숫자를 맞추는 게임
+        // 준비물: 
+        // 1. 입력 받는 input
+        // 2. 시작버튼 || 재도전 버튼
+        // 3. 라이프 갯수를 알려주는 무언가
+        // 4. 결과 메세지를 알수있는 무언가
+        // 게임프로세스:
+        //1. User로부터 입력받는다 (도전기회는 10번으로 정한다)
+        
+        //2. 랜덤을 돌려준다
+        //3. (1, 2번) 랜덤 숫자를 비교한다  
+        //4. 랜덤 숫자보다 유저의 숫자가 크면 더 작은 숫자를 유도하고,
+        //5. 랜덤 숫자보다 유저의 숫자가 더 작으면 큰숫자를 유도한다.
+        //6. (4,5번)이 한번씩 발생할때 마다 life--
+        //7. 숫자가 같다면 당첨!
+        //8. 재도전 버튼 클릭 
+        let [num, life] = [0, 10];
+        $('button.start').click(function(){
+            num = parseInt(Math.random()*100)+1;
+          $('input').attr('disabled',false);
+        
+
+          $(this).attr('disabled',true);
+          life =10;
+          $('h3>span').text(life);
+          $('input').val(0);
+
+          });
+
+        $('button.check').click(function(){
+           let userNum=$('input').val()*1;
+           console.log(`유저가 입력한 값 : ${userNum} 컴퓨터가 입력한 값 : ${num}`);
+            if(num > userNum){
+                $('h4').text('더 큰 값을 입력해주세요');
+                life --;   
+            }else if(num < userNum){
+                $('h4').text('더 작은 값을 입력해주세요');
+                life --;
+            }else {
+                $('h4').text('정답입니다!');
+            }
+            });      
+          
+            $('h3>span').text(life);
+           console.log(life);
+           
+           if(life == 0){
+             alert('게임이 끝났습니다!');
+               $('input').attr('disabled',true);
+               $('button.start').attr('disabled',flase);
+               $('button.start').text('재도전');
+               $('h4').text('실패했습니다. 재도전 해주세요!');
+            };
+
+
+
+     </script>
+</body>
+</html>
