@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>아코디언 퀴즈</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f8f8;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .quiz-container {
+        width: 100%;
+        max-width: 800px;
+      }
+
+      /* 리스트 스타일 */
+      .quiz-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      /* 홀수(li): 질문 타일 */
+      .quiz-list li:nth-child(odd) {
+        background: repeating-linear-gradient(45deg, #ffebeb, #ffebeb 10px, #ffd1d1 10px, #ffd1d1 20px);
+        padding: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        cursor: pointer;
+        transition: background 0.5s;
+        border: 2px solid #ff9f9f;
+      }
+
+      /* 짝수(li): 정답 입력란 */
+      .quiz-list li:nth-child(even) {
+        background: #fff5f5;
+        border: 2px solid #ff9f9f;
+        border-top: none;
+        height: 0;
+        overflow: hidden;
+        transition: all 0.5s;
+      }
+
+      /* 입력창 */
+      .answer-input {
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #ff9f9f;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+      .answer-input::placeholder {
+        color: #ccc;
+      }
+
+      button {
+        margin-top: 10px;
+
+        background-color: #ff9f9f;
+        border: none;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        width: calc(100% - 50px);
+        text-align: center;
+        box-sizing: border-box;
+        line-height: 40px;
+      }
+
+      button:nth-of-type(2) {
+        width: 40px;
+        background-color: #ccc;
+        margin-left: 5px;
+        padding: 0;
+      }
+
+      .submit-btn.disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      /* 비활성화 상태 (회색 배경) */
+      .quiz-list li.disabled {
+        background: #e0e0e0;
+        color: #666;
+        cursor: not-allowed;
+        border: 2px solid #b3b3b3;
+      }
+
+      li.question-item.active + .answer-item {
+        padding: 15px;
+        height: 120px;
+      }
+      .submit-btn.err{
+        animation: err 0.1s 6 forwards;
+      }
+      @keyframes err {
+        0%{
+            transform:rotate(0deg);
+        }
+        40%{
+            transform:rotate(-1deg);
+        }
+        80%{
+            transform:rotate(1deg);
+        }
+        100%{
+            transform:rotate(0deg);
+        }
+        
+      }
+    </style>
+    <script src="./jquery.js"></script>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <ul class="quiz-list">
+        <li class="question-item">여기에 질문이 들어옴</li>
+        <li class="answer-item">
+          <input type="text" class="answer-input" placeholder="정답 입력" />
+          <button class="submit-btn">제출</button>
+          <button class="hint">힌트</button>
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      let quiz = [
+        {question: '값을 다시 치환할 수 있는 변수의 역할로 선언하는 키워드는?', answer: 'let'},
+        {question: '값을 다시 치환할 수 없는 변수의 역할로 선언하는 키워드는?', answer: 'const'},
+        {question: '두 개의 값이 같은지 비교하는 연산자는?', answer: '=='},
+        {question: '자료형까지 비교하는 엄격한 동등 연산자는?', answer: '==='},
+        {question: 'if문에서 조건이 참이면 실행되는 부분을 나타내는 키워드는?', answer: 'if'},
+        {question: '조건이 거짓일 경우 실행되는 블록을 나타내는 키워드는?', answer: 'else'},
+        {question: '조건이 여러 개일 때 사용하는 조건문 키워드는?', answer: 'else if'},
+        {question: '배열에만 사용할 수 있는 js고유 반복문은?', answer: 'foreach'},
+        {question: 'jQuery에서 dom탐색을 할 수있는 함수 표시는?', answer: '$'},
+        {question: '콘솔에 출력하는 함수는?', answer: 'console.log'}
+      ];
+
+        let que = $('.question-item');
+        const ans = $('.answer-item');
+        const list = $('.quiz-list');
+        let submit = $('.submit-btn');
+        const hint = $('.hint');
+        //disalbed를 가진 que인 경우에 active가 추가 되지 않도록 조건문을 넣어보세요
+       
+        que.click(function(){
+            let state = $(this).hasClass('disabled');
+            if(!state){
+                $(this).toggleClass('active');
+            }
+            //클릭했을때 그 상황에 actvie라는 클래스를 추가
+             //$(this).addClass('active'); //열릴때 
+      //      console.log($(this).hasClass('disabled'));
+      //    $(this).toggleClass('active'); //사라질때
+        });
+
+
+        hint.click(function(){
+            //alert('!!');
+            
+          let ind = $(this).parent().attr('num-data');
+          let ans = quiz[ind].answer;
+          let inp = $(this).prevAll('.answer-input');
+          inp.attr('placeholder',ans);
+      
+
+
+        });
+
+
+
+        quiz.forEach(function(e, i){
+            let qu = que.clone(true);
+            let an = ans.clone(true);
+        
+            qu.text(`Q${i+1}.${e.question}`);
+            qu.addClass('disabled');
+
+            an.attr('num-data',i);
+
+
+
+            list.append(qu);
+            list.append(an);
+          
+        
+
+     //      for(let i =0; i<=10; i++){
+  //         const h2Clone = h2.clone();
+     //      wrap.append(h2Clone);
+            
+            
+        })
+      
+        que.remove();
+        ans.remove();
+      que = $('.question-item');
+      que.first().removeClass('disabled');
+      
+      submit = $('.submit-btn');
+      submit.click(function(){
+          let nowVal = $(this).prev().val();
+          let ind = $(this).parent().attr('num-data');
+          let ans = quiz[ind].answer;
+
+          if (nowVal === ans){
+            // 정답일때, 지금 클릭한 버튼의 텍스트 내용을 
+            // 🤞 (윈도우 + ;)
+            // 오답일떄, 🤢
+            $(this).text('🤞'); 
+           que.removeClass('active');
+           $(this).parent().next().addClass('active');
+            $(this).parent().next().removeClass('disabled');//맞추면 다음거 열리는 
+           
+            }else{
+             
+             $(this).text('🤢');
+          }
+          
+          console.log(quiz[ind].answer);
+        
+        });
+
+    </script>
+  </body>
+</html>
